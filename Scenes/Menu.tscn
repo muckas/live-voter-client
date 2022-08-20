@@ -23,4 +23,18 @@ margin_right = 199.0
 margin_bottom = 170.0
 text = "Check Connection"
 
+[node name="GetImageButton" type="Button" parent="."]
+margin_left = 48.0
+margin_top = 280.0
+margin_right = 206.0
+margin_bottom = 327.0
+text = "Get Image"
+
+[node name="ImageRect" type="TextureRect" parent="."]
+margin_left = 348.0
+margin_top = 50.0
+margin_right = 839.0
+margin_bottom = 541.0
+
 [connection signal="pressed" from="CheckButton" to="." method="_on_CheckButton_pressed"]
+[connection signal="pressed" from="GetImageButton" to="." method="_on_GetImageButton_pressed"]
