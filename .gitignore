@@ -1,0 +1,12 @@
+*.swp
+*.kra~
+*.import
+.import/
+bin/
+export_presets.cfg
+git_api.gdnlib
+git_api.gdns
+.fscache
+export.cfg
+export_presets.cfg
+*.translation
