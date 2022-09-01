@@ -39,3 +39,6 @@ func _on_server_connect_complete(_result:int, _response_code:int, _headers:PoolS
 	else:
 		server_label.text = "Server Error"
 		Global.server_ok = false
+
+func _on_BtVoteEditor_pressed() -> void:
+	get_tree().change_scene("res://scenes/VoteEditor.tscn")

@@ -1,0 +1,105 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://ui/themes/main_theme.tres" type="Theme" id=1]
+[ext_resource path="res://scenes/VoteEditor.gd" type="Script" id=2]
+[ext_resource path="res://objects/VotePageEdit.tscn" type="PackedScene" id=3]
+
+[node name="VoteEditor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+vote_page_scene = ExtResource( 3 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+custom_constants/separation = 16
+
+[node name="HBoxSaveLoad" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 42.0
+custom_constants/separation = 16
+
+[node name="BtLoadVote" type="Button" parent="VBoxContainer/HBoxSaveLoad"]
+margin_right = 504.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+text = "Load Vote"
+
+[node name="BtSaveVote" type="Button" parent="VBoxContainer/HBoxSaveLoad"]
+margin_left = 520.0
+margin_right = 1024.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+text = "Save Vote"
+
+[node name="HBoxEdit" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 58.0
+margin_right = 1024.0
+margin_bottom = 100.0
+custom_constants/separation = 16
+
+[node name="BtNewPage" type="Button" parent="VBoxContainer/HBoxEdit"]
+margin_right = 1024.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+text = "New Page"
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+margin_top = 116.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+tab_align = 0
+
+[node name="PopupNewPage" type="PopupPanel" parent="."]
+margin_left = 104.0
+margin_top = 214.0
+margin_right = 919.0
+margin_bottom = 324.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupNewPage"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 811.0
+margin_bottom = 106.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupNewPage/VBoxContainer"]
+margin_right = 807.0
+margin_bottom = 42.0
+
+[node name="PageNameLabel" type="Label" parent="PopupNewPage/VBoxContainer/HBoxContainer"]
+margin_top = 3.0
+margin_right = 698.0
+margin_bottom = 39.0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "Enter page name"
+align = 1
+valign = 1
+
+[node name="BtSubmitName" type="Button" parent="PopupNewPage/VBoxContainer/HBoxContainer"]
+margin_left = 702.0
+margin_right = 807.0
+margin_bottom = 42.0
+text = "Submit"
+
+[node name="PageNameEdit" type="LineEdit" parent="PopupNewPage/VBoxContainer"]
+margin_top = 46.0
+margin_right = 807.0
+margin_bottom = 102.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+align = 1
+placeholder_text = "Page Name"
+
+[connection signal="pressed" from="VBoxContainer/HBoxEdit/BtNewPage" to="." method="_on_BtNewPage_pressed"]
+[connection signal="pressed" from="PopupNewPage/VBoxContainer/HBoxContainer/BtSubmitName" to="." method="_on_PageNameEdit_text_entered" binds= [ "" ]]
+[connection signal="text_entered" from="PopupNewPage/VBoxContainer/PageNameEdit" to="." method="_on_PageNameEdit_text_entered"]
