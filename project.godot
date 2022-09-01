@@ -11,8 +11,12 @@ config_version=4
 [application]
 
 config/name="live-voter-client"
-run/main_scene="res://Scenes/Menu.tscn"
+run/main_scene="res://scenes/Menu.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Global="*res://global/autoload/Global.gd"
 
 [gui]
 

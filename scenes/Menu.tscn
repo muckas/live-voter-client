@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scenes/Menu.gd" type="Script" id=1]
+[ext_resource path="res://ui/themes/main_theme.tres" type="Theme" id=2]
+
+[node name="Menu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_top = 2.0
+margin_right = 1.0
+margin_bottom = 2.0
+theme = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_horizontal_guides_": [  ],
+"_edit_lock_": true,
+"_edit_vertical_guides_": [  ]
+}
+
+[node name="ViewportTimer" type="Timer" parent="."]
+wait_time = 0.05
+one_shot = true
+autostart = true
+
+[node name="HFlowContainer" type="HFlowContainer" parent="."]
+margin_right = 300.0
+margin_bottom = 232.0
+custom_constants/hseparation = 300
+
+[node name="BtHostVote" type="Button" parent="HFlowContainer"]
+margin_right = 300.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Host Vote"
+
+[node name="BtJoinVote" type="Button" parent="HFlowContainer"]
+margin_top = 62.0
+margin_right = 300.0
+margin_bottom = 104.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Join Vote"
+
+[node name="BtCreateVote" type="Button" parent="HFlowContainer"]
+margin_top = 124.0
+margin_right = 300.0
+margin_bottom = 166.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Create Vote"
+
+[node name="ServerAddress" type="LineEdit" parent="HFlowContainer"]
+margin_top = 186.0
+margin_right = 300.0
+margin_bottom = 232.0
+size_flags_horizontal = 3
+text = "server_url"
+
+[node name="PortContainer" type="HSplitContainer" parent="HFlowContainer"]
+margin_top = 252.0
+margin_right = 300.0
+margin_bottom = 298.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ServerPort" type="SpinBox" parent="HFlowContainer/PortContainer"]
+margin_right = 122.0
+margin_bottom = 46.0
+min_value = 1.0
+max_value = 65565.0
+value = 80.0
+rounded = true
+
+[node name="BtConnect" type="Button" parent="HFlowContainer/PortContainer"]
+margin_left = 134.0
+margin_right = 300.0
+margin_bottom = 46.0
+text = "Connect"
+
+[node name="ServerLabel" type="Label" parent="HFlowContainer"]
+margin_top = 318.0
+margin_right = 300.0
+margin_bottom = 354.0
+size_flags_horizontal = 3
+text = "Server Status"
+align = 1
+
+[node name="VersionLabel" type="Label" parent="HFlowContainer"]
+margin_top = 374.0
+margin_right = 300.0
+margin_bottom = 410.0
+size_flags_horizontal = 3
+text = "Client Version"
+align = 1
+
+[connection signal="timeout" from="ViewportTimer" to="." method="_on_viewport_size_changed"]
+[connection signal="pressed" from="HFlowContainer/PortContainer/BtConnect" to="." method="_on_server_connect"]
