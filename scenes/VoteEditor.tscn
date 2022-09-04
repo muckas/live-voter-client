@@ -129,9 +129,51 @@ margin_top = 218.0
 margin_right = 727.0
 margin_bottom = 363.0
 window_title = "Back to menu"
-dialog_text = "Exit without saving?"
+dialog_text = "Unsaved progress will be lost.
+Exit to menu?"
+
+[node name="PopupNewVote" type="PopupPanel" parent="."]
+margin_left = 138.0
+margin_top = 159.0
+margin_right = 879.0
+margin_bottom = 348.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupNewVote"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 737.0
+margin_bottom = 185.0
+
+[node name="NewVoteLabel" type="Label" parent="PopupNewVote/VBoxContainer"]
+margin_right = 733.0
+margin_bottom = 131.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "New vote created
+Vote ID below"
+align = 1
+valign = 1
+
+[node name="NewVoteId" type="LineEdit" parent="PopupNewVote/VBoxContainer"]
+margin_top = 135.0
+margin_right = 733.0
+margin_bottom = 181.0
+align = 1
+editable = false
+
+[node name="PopupError" type="AcceptDialog" parent="."]
+margin_left = 319.0
+margin_top = 194.0
+margin_right = 684.0
+margin_bottom = 353.0
+window_title = "Error!"
+dialog_text = "Server Error"
 
 [connection signal="pressed" from="VBoxContainer/HBoxSaveLoad/BtExit" to="." method="_on_BtExit_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxSaveLoad/BtSaveVote" to="." method="_on_BtSaveVote_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxEdit/BtNewPage" to="." method="_on_BtNewPage_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxEdit/BtVoteName" to="." method="_on_BtVoteName_pressed"]
 [connection signal="focus_exited" from="VBoxContainer/HBoxEdit/VoteNameEdit" to="." method="_on_VoteNameEdit_text_entered" binds= [ "" ]]

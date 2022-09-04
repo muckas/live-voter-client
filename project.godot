@@ -34,6 +34,15 @@ config/icon="res://icon.png"
 
 Global="*res://global/autoload/Global.gd"
 
+[debug]
+
+gdscript/warnings/return_value_discarded=false
+
+[global]
+
+error=false
+warnings=false
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true

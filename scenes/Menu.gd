@@ -3,6 +3,7 @@ extends Control
 export(String) var _server_url = "http://localhost"
 export(int) var _server_port = 8080
 
+onready var server_error_popup:Popup = $PopupServerError
 onready var hflow:HFlowContainer = $HFlowContainer
 onready var version_label:Label = $HFlowContainer/VersionLabel
 onready var server_label:Label = $HFlowContainer/ServerLabel
@@ -23,6 +24,7 @@ func _on_server_connect() -> void:
 	var endpoint:String = "/check"
 	Global.server_url = server_addres_edit.text
 	Global.server_port = server_port_edit.value
+	server_label.text = "Connecting..."
 	var request_url = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -41,4 +43,7 @@ func _on_server_connect_complete(_result:int, _response_code:int, _headers:PoolS
 		Global.server_ok = false
 
 func _on_BtVoteEditor_pressed() -> void:
-	get_tree().change_scene("res://scenes/VoteEditor.tscn")
+	if Global.server_ok:
+		get_tree().change_scene("res://scenes/VoteEditor.tscn")
+	else:
+		server_error_popup.popup_centered()

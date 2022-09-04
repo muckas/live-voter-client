@@ -14,6 +14,12 @@ func _ready() -> void:
 	_on_self_resized()
 
 
+func return_vote_item() -> Dictionary:
+	var vote_item:Dictionary = Dictionary()
+	vote_item["item_name"] = name_button.text
+	return vote_item
+
+
 func _on_self_resized() -> void:
 	vbox.rect_size = rect_size
 

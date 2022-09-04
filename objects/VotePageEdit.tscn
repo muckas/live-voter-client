@@ -75,7 +75,6 @@ custom_constants/hseparation = 16
 columns = 2
 
 [node name="NamePopup" type="PopupPanel" parent="."]
-visible = true
 margin_left = 139.0
 margin_top = 195.0
 margin_right = 822.0

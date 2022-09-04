@@ -7,10 +7,21 @@ onready var vbox:VBoxContainer = $VBoxContainer
 onready var grid:GridContainer = $VBoxContainer/GridContainer
 onready var name_popup:Popup = $NamePopup
 onready var name_edit:LineEdit = $NamePopup/VBoxContainer/PageNameEdit
+onready var columns_spinbox:SpinBox = $VBoxContainer/HBoxContainer/ColumnsSpinBox
 
 func _ready() -> void:
 	connect("resized", self, "_on_self_resized")
 	_on_self_resized()
+
+
+func return_vote_page() -> Dictionary:
+	var vote_page:Dictionary = Dictionary()
+	vote_page["page_name"] = get_name()
+	vote_page["page_columns"] = columns_spinbox.value
+	vote_page["page_items"] = Dictionary()
+	for index in range(grid.get_child_count()):
+		vote_page["page_items"][index] = grid.get_child(index).return_vote_item()
+	return vote_page
 
 
 func _on_self_resized() -> void:

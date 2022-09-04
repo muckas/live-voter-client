@@ -84,7 +84,7 @@ margin_top = 318.0
 margin_right = 300.0
 margin_bottom = 354.0
 size_flags_horizontal = 3
-text = "Server Status"
+text = "Connecting..."
 align = 1
 
 [node name="VersionLabel" type="Label" parent="HFlowContainer"]
@@ -94,6 +94,13 @@ margin_bottom = 410.0
 size_flags_horizontal = 3
 text = "Client Version"
 align = 1
+
+[node name="PopupServerError" type="AcceptDialog" parent="."]
+margin_top = 106.0
+margin_right = 301.0
+margin_bottom = 208.0
+window_title = "Server Error!"
+dialog_text = "Server offline"
 
 [connection signal="timeout" from="ViewportTimer" to="." method="_on_viewport_size_changed"]
 [connection signal="pressed" from="HFlowContainer/BtVoteEditor" to="." method="_on_BtVoteEditor_pressed"]
