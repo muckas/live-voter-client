@@ -35,6 +35,11 @@ func add_vote_item(name:String) -> void:
 	grid.add_child(vote_item_instance)
 	vote_item_instance.set_item_name(name)
 
+func upload_images(vote_id:String, page_index:int) -> bool:
+	for item_index in range(grid.get_child_count()):
+		if grid.get_child(item_index).upload_image(vote_id, page_index, item_index) == false:
+			return false
+	return true
 
 func _on_self_resized() -> void:
 	vbox.rect_position = Vector2(16, 16)

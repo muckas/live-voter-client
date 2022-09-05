@@ -2,6 +2,8 @@ extends Control
 
 export(PackedScene) var vote_page_scene:PackedScene
 
+onready var info_popup:Popup = $PopupInfo
+onready var info_label:Label = $PopupInfo/InfoLabel
 onready var error_popup:Popup = $PopupError
 onready var vbox:VBoxContainer = $VBoxContainer
 onready var exit_popup:Popup = $PopupExit
@@ -29,6 +31,13 @@ func _return_vote_data() -> Dictionary:
 	for index in range(tab_container.get_child_count()):
 		vote_data["vote_pages"][index] = tab_container.get_child(index).return_vote_page()
 	return vote_data
+
+func _upload_vote_images(vote_id:String) -> bool:
+	for page_index in range(tab_container.get_child_count()):
+		if tab_container.get_child(page_index).upload_images(vote_id, page_index) == false:
+			return false
+	return true
+
 
 func _create_vote_from_data(vote_data:Dictionary) -> void:
 	vote_name_edit.text = vote_data["vote_name"]
@@ -88,6 +97,8 @@ func _on_BtSaveVote_pressed() -> void:
 	save_confirm_popup.popup_centered()
 
 func _on_PopupSave_confirmed() -> void:
+	info_label.text = "Uploading vote data"
+	info_popup.popup_centered()
 	var query:String = JSON.print(_return_vote_data())
 	var headers:PoolStringArray = ["Content-Type: application/json"]
 	var endpoint:String = "/new-vote"
@@ -102,7 +113,14 @@ func _on_new_vote_request_completed(_result:int, _response_code:int, _headers:Po
 	if json.result:
 		var response:Dictionary = json.result
 		if response["error"] == "OK":
-			new_vote_id.text = response["message"]
+			var vote_id:String = response["message"]
+			new_vote_id.text = vote_id
+			if _upload_vote_images(vote_id) == false:
+				info_popup.visible = false
+				error_popup.dialog_text = "Image upload failed"
+				error_popup.popup_centered()
+				return
+			info_popup.visible = false
 			new_vote_popup.popup_centered()
 		else:
 			error_popup.dialog_text = "Server not responding"
@@ -142,5 +160,3 @@ func _on_vote_data_request_completed(result:int, _response_code:int, _headers:Po
 	else:
 		error_popup.dialog_text = "Server not responding"
 		error_popup.popup_centered()
-
-

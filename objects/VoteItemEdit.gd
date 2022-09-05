@@ -23,6 +23,11 @@ func set_item_name(name:String):
 	name_edit.text = name
 	_on_NameEdit_text_entered(name)
 
+func upload_image(vote_id:String, page_index:int, item_index:int) -> bool:
+	var img:Image = texture_rect.texture.get_data()
+	var endpoint:String = "/upload-image/" + vote_id + "/" + String(page_index) + "_" + String(item_index)
+	return Global.upload_image(img, endpoint)
+
 
 func _on_self_resized() -> void:
 	vbox.rect_size = rect_size
