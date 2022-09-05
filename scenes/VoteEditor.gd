@@ -38,7 +38,6 @@ func _upload_vote_images(vote_id:String) -> bool:
 			return false
 	return true
 
-
 func _create_vote_from_data(vote_data:Dictionary) -> void:
 	vote_name_edit.text = vote_data["vote_name"]
 	vote_name_button.text = vote_data["vote_name"]
@@ -51,7 +50,9 @@ func _create_vote_from_data(vote_data:Dictionary) -> void:
 		vote_page_instance.set_page_columns(vote_page["page_columns"])
 		for item_index in range(len(vote_page["page_items"])):
 			vote_page_instance.add_vote_item(
-				vote_page["page_items"][String(item_index)]["item_name"]
+				vote_page["page_items"][String(item_index)]["item_name"],
+				page_index,
+				item_index
 				)
 
 func _clean_vote_editor() -> void:
@@ -141,6 +142,7 @@ func _on_PopupLoad_confirmed():
 func _on_LoadVoteIdEdit_text_entered(_new_text:String) -> void:
 	load_vote_popup.visible = false
 	var vote_id:String = load_vote_id_edit.text
+	Global.editor_vote_id = vote_id
 	var endpoint:String = "/vote-data/" + vote_id
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
