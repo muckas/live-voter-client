@@ -19,6 +19,10 @@ func return_vote_item() -> Dictionary:
 	vote_item["item_name"] = name_button.text
 	return vote_item
 
+func set_item_name(name:String):
+	name_edit.text = name
+	_on_NameEdit_text_entered(name)
+
 
 func _on_self_resized() -> void:
 	vbox.rect_size = rect_size

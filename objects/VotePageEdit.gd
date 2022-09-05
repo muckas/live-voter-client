@@ -23,6 +23,18 @@ func return_vote_page() -> Dictionary:
 		vote_page["page_items"][index] = grid.get_child(index).return_vote_item()
 	return vote_page
 
+func set_page_name(name:String) -> void:
+	set_name(name)
+
+func set_page_columns(columns:int) -> void:
+	columns_spinbox.value = columns
+	_on_ColumnsSpinBox_value_changed(columns)
+
+func add_vote_item(name:String) -> void:
+	var vote_item_instance = vote_item_scene.instance()
+	grid.add_child(vote_item_instance)
+	vote_item_instance.set_item_name(name)
+
 
 func _on_self_resized() -> void:
 	vbox.rect_position = Vector2(16, 16)

@@ -11,11 +11,45 @@ onready var new_page_name:LineEdit = $PopupNewPage/VBoxContainer/PageNameEdit
 onready var vote_name_button:Button = $VBoxContainer/HBoxEdit/BtVoteName
 onready var vote_name_edit:LineEdit = $VBoxContainer/HBoxEdit/VoteNameEdit
 onready var new_vote_popup:Popup = $PopupNewVote
+onready var save_confirm_popup:Popup = $PopupSave
 onready var new_vote_id:LineEdit = $PopupNewVote/VBoxContainer/NewVoteId
+onready var load_vote_confirm_popup:Popup = $PopupLoad
+onready var load_vote_popup:Popup = $PopupLoadVote
+onready var load_vote_id_edit:LineEdit = $PopupLoadVote/HBoxContainer/LoadVoteIdEdit
 
 func _ready() -> void:
 	get_tree().root.connect("size_changed", self, "_on_viewport_size_changed")
 	_on_viewport_size_changed()
+
+
+func _return_vote_data() -> Dictionary:
+	var vote_data:Dictionary = Dictionary()
+	vote_data["vote_name"] = vote_name_button.text
+	vote_data["vote_pages"] = Dictionary()
+	for index in range(tab_container.get_child_count()):
+		vote_data["vote_pages"][index] = tab_container.get_child(index).return_vote_page()
+	return vote_data
+
+func _create_vote_from_data(vote_data:Dictionary) -> void:
+	vote_name_edit.text = vote_data["vote_name"]
+	vote_name_button.text = vote_data["vote_name"]
+	var vote_pages:Dictionary = vote_data["vote_pages"]
+	for page_index in range(len(vote_pages)):
+		var vote_page:Dictionary = vote_pages[String(page_index)]
+		var vote_page_instance:VotePageEdit = vote_page_scene.instance()
+		tab_container.add_child(vote_page_instance)
+		vote_page_instance.set_page_name(vote_page["page_name"])
+		vote_page_instance.set_page_columns(vote_page["page_columns"])
+		for item_index in range(len(vote_page["page_items"])):
+			vote_page_instance.add_vote_item(
+				vote_page["page_items"][String(item_index)]["item_name"]
+				)
+
+func _clean_vote_editor() -> void:
+	vote_name_edit.text = ""
+	vote_name_button.text = "Vote Name"
+	for child in tab_container.get_children():
+		child.queue_free()
 
 
 func _on_viewport_size_changed() -> void:
@@ -46,16 +80,15 @@ func _on_BtVoteName_pressed() -> void:
 
 func _on_VoteNameEdit_text_entered(_new_text:String) -> void:
 	vote_name_button.text = vote_name_edit.text
-	vote_name_button.visible = true
+	vote_name_button.sdasvisible = true
 	vote_name_edit.visible = false
 
+
 func _on_BtSaveVote_pressed() -> void:
-	var vote_data:Dictionary = Dictionary()
-	vote_data["vote_name"] = vote_name_button.text
-	vote_data["vote_pages"] = Dictionary()
-	for index in range(tab_container.get_child_count()):
-		vote_data["vote_pages"][index] = tab_container.get_child(index).return_vote_page()
-	var query:String = JSON.print(vote_data)
+	save_confirm_popup.popup_centered()
+
+func _on_PopupSave_confirmed() -> void:
+	var query:String = JSON.print(_return_vote_data())
 	var headers:PoolStringArray = ["Content-Type: application/json"]
 	var endpoint:String = "/new-vote"
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
@@ -72,6 +105,42 @@ func _on_new_vote_request_completed(_result:int, _response_code:int, _headers:Po
 			new_vote_id.text = response["message"]
 			new_vote_popup.popup_centered()
 		else:
+			error_popup.dialog_text = "Server not responding"
 			error_popup.popup_centered()
 	else:
+		error_popup.dialog_text = "Server not responding"
 		error_popup.popup_centered()
+
+
+func _on_BtLoadVote_pressed() -> void:
+	load_vote_confirm_popup.popup_centered()
+
+func _on_PopupLoad_confirmed():
+	_clean_vote_editor()
+	load_vote_id_edit.text = ""
+	load_vote_popup.popup_centered()
+
+func _on_LoadVoteIdEdit_text_entered(_new_text:String) -> void:
+	load_vote_popup.visible = false
+	var vote_id:String = load_vote_id_edit.text
+	var endpoint:String = "/vote-data/" + vote_id
+	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
+	var http:HTTPRequest = HTTPRequest.new()
+	self.add_child(http)
+	http.connect("request_completed", self, "_on_vote_data_request_completed")
+	http.request(request_url)
+
+func _on_vote_data_request_completed(result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray) -> void:
+	var json:JSONParseResult = JSON.parse(body.get_string_from_utf8())
+	if result == HTTPRequest.RESULT_SUCCESS:
+		if json.result:
+			var vote_data:Dictionary = json.result
+			_create_vote_from_data(vote_data)
+		else:
+			error_popup.dialog_text = "Vote not found"
+			error_popup.popup_centered()
+	else:
+		error_popup.dialog_text = "Server not responding"
+		error_popup.popup_centered()
+
+

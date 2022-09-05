@@ -133,6 +133,23 @@ window_title = "Back to menu"
 dialog_text = "Unsaved progress will be lost.
 Exit to menu?"
 
+[node name="PopupLoad" type="ConfirmationDialog" parent="."]
+margin_left = 330.0
+margin_top = 218.0
+margin_right = 727.0
+margin_bottom = 363.0
+window_title = "Load vote"
+dialog_text = "Unsaved progress will be lost.
+Load new vote?"
+
+[node name="PopupSave" type="ConfirmationDialog" parent="."]
+margin_left = 330.0
+margin_top = 218.0
+margin_right = 727.0
+margin_bottom = 363.0
+window_title = "Save vote"
+dialog_text = "Upload new vote?"
+
 [node name="PopupNewVote" type="PopupPanel" parent="."]
 margin_left = 138.0
 margin_top = 159.0
@@ -165,6 +182,36 @@ margin_bottom = 181.0
 align = 1
 editable = false
 
+[node name="PopupLoadVote" type="PopupPanel" parent="."]
+margin_left = 108.0
+margin_top = 194.0
+margin_right = 897.0
+margin_bottom = 261.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupLoadVote"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 785.0
+margin_bottom = 63.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LoadVoteIdEdit" type="LineEdit" parent="PopupLoadVote/HBoxContainer"]
+margin_right = 672.0
+margin_bottom = 59.0
+size_flags_horizontal = 3
+align = 1
+placeholder_text = "Vote ID"
+
+[node name="BtLoadVoteSubmit" type="Button" parent="PopupLoadVote/HBoxContainer"]
+margin_left = 676.0
+margin_right = 781.0
+margin_bottom = 59.0
+text = "Submit"
+
 [node name="PopupError" type="AcceptDialog" parent="."]
 margin_left = 319.0
 margin_top = 194.0
@@ -174,6 +221,7 @@ window_title = "Error!"
 dialog_text = "Server Error"
 
 [connection signal="pressed" from="VBoxContainer/HBoxSaveLoad/BtExit" to="." method="_on_BtExit_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxSaveLoad/BtLoadVote" to="." method="_on_BtLoadVote_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxSaveLoad/BtSaveVote" to="." method="_on_BtSaveVote_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxEdit/BtNewPage" to="." method="_on_BtNewPage_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxEdit/BtVoteName" to="." method="_on_BtVoteName_pressed"]
@@ -182,3 +230,7 @@ dialog_text = "Server Error"
 [connection signal="pressed" from="PopupNewPage/VBoxContainer/HBoxContainer/BtSubmitName" to="." method="_on_PageNameEdit_text_entered" binds= [ "" ]]
 [connection signal="text_entered" from="PopupNewPage/VBoxContainer/PageNameEdit" to="." method="_on_PageNameEdit_text_entered"]
 [connection signal="confirmed" from="PopupExit" to="." method="_on_PopupExit_confirmed"]
+[connection signal="confirmed" from="PopupLoad" to="." method="_on_PopupLoad_confirmed"]
+[connection signal="confirmed" from="PopupSave" to="." method="_on_PopupSave_confirmed"]
+[connection signal="text_entered" from="PopupLoadVote/HBoxContainer/LoadVoteIdEdit" to="." method="_on_LoadVoteIdEdit_text_entered"]
+[connection signal="pressed" from="PopupLoadVote/HBoxContainer/BtLoadVoteSubmit" to="." method="_on_LoadVoteIdEdit_text_entered" binds= [ "" ]]
