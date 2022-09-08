@@ -142,7 +142,7 @@ func _on_PopupLoad_confirmed():
 func _on_LoadVoteIdEdit_text_entered(_new_text:String) -> void:
 	load_vote_popup.visible = false
 	var vote_id:String = load_vote_id_edit.text
-	Global.editor_vote_id = vote_id
+	Global.active_vote_id = vote_id
 	var endpoint:String = "/vote-data/" + vote_id
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
