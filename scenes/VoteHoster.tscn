@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ui/themes/main_theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/fonts/times.ttf" type="DynamicFontData" id=2]
@@ -8,19 +8,23 @@
 size = 64
 font_data = ExtResource( 2 )
 
+[sub_resource type="DynamicFont" id=2]
+size = 48
+font_data = ExtResource( 2 )
+
 [node name="VoteHoster" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 3 )
 
-[node name="VBoxVoteStart" type="VBoxContainer" parent="."]
+[node name="VBoxVoteIntro" type="VBoxContainer" parent="."]
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VoteNameLabel" type="Label" parent="VBoxVoteStart"]
+[node name="VoteNameLabel" type="Label" parent="VBoxVoteIntro"]
 margin_right = 1024.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
@@ -31,11 +35,39 @@ align = 1
 valign = 2
 autowrap = true
 
-[node name="ClientCountLabel" type="Label" parent="VBoxVoteStart"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxVoteIntro"]
 margin_top = 302.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VoteCodeLabel" type="Label" parent="VBoxVoteIntro/HBoxContainer"]
+margin_right = 510.0
+margin_bottom = 298.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+custom_fonts/font = SubResource( 2 )
+text = "Vote code
+loading..."
+align = 1
+valign = 1
+
+[node name="ClientCountLabel" type="Label" parent="VBoxVoteIntro/HBoxContainer"]
+margin_left = 514.0
+margin_right = 1024.0
+margin_bottom = 298.0
+size_flags_horizontal = 3
 size_flags_vertical = 7
 text = "Connected clients: 0"
 align = 1
+valign = 1
+autowrap = true
+
+[node name="PopupError" type="AcceptDialog" parent="."]
+margin_left = 305.0
+margin_top = 218.0
+margin_right = 686.0
+margin_bottom = 380.0
+dialog_text = "Error"
+dialog_autowrap = true

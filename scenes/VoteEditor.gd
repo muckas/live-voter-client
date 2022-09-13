@@ -24,6 +24,10 @@ func _ready() -> void:
 	_on_viewport_size_changed()
 
 
+func _error(error_text:String) -> void:
+	error_popup.dialog_text = error_text
+	error_popup.popup_centered()
+
 func _return_vote_data() -> Dictionary:
 	var vote_data:Dictionary = Dictionary()
 	vote_data["vote_name"] = vote_name_button.text
@@ -118,17 +122,14 @@ func _on_new_vote_request_completed(_result:int, _response_code:int, _headers:Po
 			new_vote_id.text = vote_id
 			if _upload_vote_images(vote_id) == false:
 				info_popup.visible = false
-				error_popup.dialog_text = "Image upload failed"
-				error_popup.popup_centered()
+				_error("Image upload failed")
 				return
 			info_popup.visible = false
 			new_vote_popup.popup_centered()
 		else:
-			error_popup.dialog_text = "Server not responding"
-			error_popup.popup_centered()
+			_error(response["message"])
 	else:
-		error_popup.dialog_text = "Server not responding"
-		error_popup.popup_centered()
+		_error("Server not responding")
 
 
 func _on_BtLoadVote_pressed() -> void:
@@ -157,8 +158,6 @@ func _on_vote_data_request_completed(result:int, _response_code:int, _headers:Po
 			var vote_data:Dictionary = json.result
 			_create_vote_from_data(vote_data)
 		else:
-			error_popup.dialog_text = "Vote not found"
-			error_popup.popup_centered()
+			_error("Vote not found")
 	else:
-		error_popup.dialog_text = "Server not responding"
-		error_popup.popup_centered()
+		_error("Server not responding")
