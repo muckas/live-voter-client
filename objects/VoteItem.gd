@@ -9,9 +9,14 @@ func _ready():
 	connect("resized", self, "_on_self_resized")
 	_on_self_resized()
 
+func get_item_name() -> String:
+	return name_label.text
 
 func set_item_name(name:String):
 	name_label.text = name
+
+func get_item_texture() -> Texture:
+	return texture_rect.texture
 
 func set_item_image(page_index:int, item_index:int) -> void:
 	var endpoint:String = "/image/" + Global.active_vote_id + "/" + String(page_index) + "_" + String(item_index)
@@ -19,6 +24,7 @@ func set_item_image(page_index:int, item_index:int) -> void:
 	self.add_child(http)
 	http.connect("request_completed", self, "_on_image_request_completed")
 	http.request(Global.server_url + ":" + String(Global.server_port) + endpoint)
+
 
 
 func _on_self_resized() -> void:

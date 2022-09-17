@@ -2,6 +2,11 @@ extends Control
 
 export(PackedScene) var vote_page_scene:PackedScene
 
+var vote_state:String = "intro"
+var current_page_index:int = 0
+var vote_results:Dictionary = {}
+var current_page_node:VotePage = null
+
 onready var keep_alive_timer:Timer = $KeepAliveTimer
 onready var error_popup:Popup = $PopupError
 onready var vote_name_label:Label = $VoteIntro/VoteNameLabel
@@ -67,7 +72,7 @@ func _on_host_vote_request_completed(_result:int, _response_code:int, _headers:P
 		_error("Server not responding")
 
 
-func _on_KeepAliveTimer_timeout():
+func _on_KeepAliveTimer_timeout() -> void:
 	var endpoint:String = "/keep-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
@@ -83,3 +88,18 @@ func _on_keep_vote_request_completed(_result:int, _response_code:int, _headers:P
 			_error(response["message"])
 	else:
 		_error("Server not responding")
+
+
+func _on_StartVoteButton_pressed() -> void:
+	current_page_index = 0
+	intro_container.visible = false
+	vote_page_container.visible = true
+	_present_page()
+
+func _present_page() -> void:
+	if vote_page_container.get_child_count() > current_page_index:
+		for child in vote_page_container.get_children():
+			child.visible = false
+		current_page_node = vote_page_container.get_child(current_page_index)
+		current_page_node.visible = true
+		current_page_node.start_presenting()

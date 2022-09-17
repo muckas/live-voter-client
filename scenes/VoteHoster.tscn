@@ -48,7 +48,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VoteCodeLabel" type="Label" parent="VoteIntro/HBoxContainer"]
-margin_right = 510.0
+margin_right = 338.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
@@ -58,8 +58,17 @@ loading..."
 align = 1
 valign = 1
 
+[node name="StartVoteButton" type="Button" parent="VoteIntro/HBoxContainer"]
+margin_left = 411.0
+margin_top = 119.0
+margin_right = 611.0
+margin_bottom = 179.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+text = "Start Vote"
+
 [node name="ClientCountLabel" type="Label" parent="VoteIntro/HBoxContainer"]
-margin_left = 514.0
+margin_left = 685.0
 margin_right = 1024.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
@@ -79,7 +88,9 @@ dialog_text = "Error"
 dialog_autowrap = true
 
 [node name="VotePages" type="Control" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 
 [connection signal="timeout" from="KeepAliveTimer" to="." method="_on_KeepAliveTimer_timeout"]
+[connection signal="pressed" from="VoteIntro/HBoxContainer/StartVoteButton" to="." method="_on_StartVoteButton_pressed"]
