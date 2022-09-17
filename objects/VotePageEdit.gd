@@ -31,7 +31,7 @@ func set_page_columns(columns:int) -> void:
 	_on_ColumnsSpinBox_value_changed(columns)
 
 func add_vote_item(name:String, page_index:int, item_index:int) -> void:
-	var vote_item_instance = vote_item_scene.instance()
+	var vote_item_instance:VoteItemEdit = vote_item_scene.instance()
 	grid.add_child(vote_item_instance)
 	vote_item_instance.set_item_name(name)
 	vote_item_instance.set_item_image(page_index, item_index)

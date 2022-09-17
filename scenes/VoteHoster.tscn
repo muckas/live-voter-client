@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://ui/themes/main_theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/fonts/times.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://scenes/VoteHoster.gd" type="Script" id=3]
+[ext_resource path="res://objects/VotePage.tscn" type="PackedScene" id=4]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
@@ -17,14 +18,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = ExtResource( 3 )
+vote_page_scene = ExtResource( 4 )
 
-[node name="VBoxVoteIntro" type="VBoxContainer" parent="."]
+[node name="VoteIntro" type="VBoxContainer" parent="."]
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VoteNameLabel" type="Label" parent="VBoxVoteIntro"]
+[node name="VoteNameLabel" type="Label" parent="VoteIntro"]
 margin_right = 1024.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
@@ -35,14 +37,14 @@ align = 1
 valign = 2
 autowrap = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxVoteIntro"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VoteIntro"]
 margin_top = 302.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VoteCodeLabel" type="Label" parent="VBoxVoteIntro/HBoxContainer"]
+[node name="VoteCodeLabel" type="Label" parent="VoteIntro/HBoxContainer"]
 margin_right = 510.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
@@ -53,7 +55,7 @@ loading..."
 align = 1
 valign = 1
 
-[node name="ClientCountLabel" type="Label" parent="VBoxVoteIntro/HBoxContainer"]
+[node name="ClientCountLabel" type="Label" parent="VoteIntro/HBoxContainer"]
 margin_left = 514.0
 margin_right = 1024.0
 margin_bottom = 298.0
@@ -69,5 +71,10 @@ margin_left = 305.0
 margin_top = 218.0
 margin_right = 686.0
 margin_bottom = 380.0
+window_title = "Server error!"
 dialog_text = "Error"
 dialog_autowrap = true
+
+[node name="VotePages" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0

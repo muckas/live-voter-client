@@ -1,10 +1,13 @@
 extends Control
 
+export(PackedScene) var vote_page_scene:PackedScene
+
 onready var error_popup:Popup = $PopupError
-onready var vote_name_label:Label = $VBoxVoteIntro/VoteNameLabel
-onready var vote_code_label:Label = $VBoxVoteIntro/HBoxContainer/VoteCodeLabel
-onready var client_count_label:Label = $VBoxVoteIntro/HBoxContainer/ClientCountLabel
-onready var intro_container:Control = $VBoxVoteIntro
+onready var vote_name_label:Label = $VoteIntro/VoteNameLabel
+onready var vote_code_label:Label = $VoteIntro/HBoxContainer/VoteCodeLabel
+onready var client_count_label:Label = $VoteIntro/HBoxContainer/ClientCountLabel
+onready var intro_container:Control = $VoteIntro
+onready var vote_page_container:Control = $VotePages
 
 
 func _ready() -> void:
@@ -19,6 +22,24 @@ func _error(error_text:String) -> void:
 
 func _on_viewport_size_changed() -> void:
 	intro_container.rect_size = get_viewport_rect().size
+	vote_page_container.rect_size = get_viewport_rect().size
+	for child in vote_page_container.get_children():
+		child.rect_size = vote_page_container.rect_size
+
+func _load_vote_pages() -> void:
+	var vote_pages:Dictionary = Global.active_vote_data["vote_pages"]
+	for page_index in range(len(vote_pages)):
+		var vote_page:Dictionary = vote_pages[String(page_index)]
+		var vote_page_instance:VotePage = vote_page_scene.instance()
+		vote_page_container.add_child(vote_page_instance)
+		vote_page_instance.set_page_name(vote_page["page_name"])
+		for item_index in range(len(vote_page["page_items"])):
+			vote_page_instance.visible = false
+			vote_page_instance.add_vote_item(
+				vote_page["page_items"][String(item_index)]["item_name"],
+				page_index,
+				item_index
+				)
 
 func _request_vote_code() -> void:
 	var query:String = JSON.print({"vote_name": Global.active_vote_data["vote_name"]})
@@ -37,6 +58,7 @@ func _on_host_vote_request_completed(_result:int, _response_code:int, _headers:P
 		if response["error"] == "OK":
 			Global.active_vote_code = response["message"]
 			vote_code_label.text = "Vote code\n" + Global.active_vote_code.to_upper()
+			_load_vote_pages()
 		else:
 			_error(response["message"])
 	else:

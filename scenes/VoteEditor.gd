@@ -127,8 +127,10 @@ func _on_new_vote_request_completed(_result:int, _response_code:int, _headers:Po
 			info_popup.visible = false
 			new_vote_popup.popup_centered()
 		else:
+			info_popup.visible = false
 			_error(response["message"])
 	else:
+		info_popup.visible = false
 		_error("Server not responding")
 
 

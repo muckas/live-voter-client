@@ -10,9 +10,19 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Control",
+"class": "VoteItem",
+"language": "GDScript",
+"path": "res://objects/VoteItem.gd"
+}, {
+"base": "Control",
 "class": "VoteItemEdit",
 "language": "GDScript",
 "path": "res://objects/VoteItemEdit.gd"
+}, {
+"base": "Control",
+"class": "VotePage",
+"language": "GDScript",
+"path": "res://objects/VotePage.gd"
 }, {
 "base": "Control",
 "class": "VotePageEdit",
@@ -20,7 +30,9 @@ _global_script_classes=[ {
 "path": "res://objects/VotePageEdit.gd"
 } ]
 _global_script_class_icons={
+"VoteItem": "",
 "VoteItemEdit": "",
+"VotePage": "",
 "VotePageEdit": ""
 }
 
