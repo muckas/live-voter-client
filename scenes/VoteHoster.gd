@@ -2,6 +2,7 @@ extends Control
 
 export(PackedScene) var vote_page_scene:PackedScene
 
+onready var keep_alive_timer:Timer = $KeepAliveTimer
 onready var error_popup:Popup = $PopupError
 onready var vote_name_label:Label = $VoteIntro/VoteNameLabel
 onready var vote_code_label:Label = $VoteIntro/HBoxContainer/VoteCodeLabel
@@ -58,8 +59,27 @@ func _on_host_vote_request_completed(_result:int, _response_code:int, _headers:P
 		if response["error"] == "OK":
 			Global.active_vote_code = response["message"]
 			vote_code_label.text = "Vote code\n" + Global.active_vote_code.to_upper()
+			keep_alive_timer.start()
 			_load_vote_pages()
 		else:
+			_error(response["message"])
+	else:
+		_error("Server not responding")
+
+
+func _on_KeepAliveTimer_timeout():
+	var endpoint:String = "/keep-active-vote/" + Global.active_vote_code
+	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
+	var http:HTTPRequest = HTTPRequest.new()
+	self.add_child(http)
+	http.connect("request_completed", self, "_on_keep_vote_request_completed")
+	http.request(request_url)
+
+func _on_keep_vote_request_completed(_result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray) -> void:
+	var json:JSONParseResult = JSON.parse(body.get_string_from_utf8())
+	if json.result:
+		var response:Dictionary = json.result
+		if response["error"] != "OK":
 			_error(response["message"])
 	else:
 		_error("Server not responding")

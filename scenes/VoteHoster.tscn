@@ -20,6 +20,9 @@ theme = ExtResource( 1 )
 script = ExtResource( 3 )
 vote_page_scene = ExtResource( 4 )
 
+[node name="KeepAliveTimer" type="Timer" parent="."]
+wait_time = 60.0
+
 [node name="VoteIntro" type="VBoxContainer" parent="."]
 margin_right = 1024.0
 margin_bottom = 600.0
@@ -78,3 +81,5 @@ dialog_autowrap = true
 [node name="VotePages" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[connection signal="timeout" from="KeepAliveTimer" to="." method="_on_KeepAliveTimer_timeout"]
