@@ -3,7 +3,8 @@ class_name VoteItem
 
 onready var vbox:VBoxContainer = $VBoxContainer
 onready var texture_rect:TextureRect = $VBoxContainer/TextureRect
-onready var name_label:Label = $VBoxContainer/NameLabel
+onready var name_label:Label = $VBoxContainer/HBoxContainer/NameLabel
+onready var votes_label:Label = $VBoxContainer/HBoxContainer/VotesLabel
 
 func _ready():
 	connect("resized", self, "_on_self_resized")
@@ -25,6 +26,9 @@ func set_item_image(page_index:int, item_index:int) -> void:
 	http.connect("request_completed", self, "_on_image_request_completed")
 	http.request(Global.server_url + ":" + String(Global.server_port) + endpoint)
 
+func set_votes(num:int) -> void:
+	votes_label.text = String(num)
+	votes_label.visible = true
 
 
 func _on_self_resized() -> void:

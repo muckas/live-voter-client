@@ -32,65 +32,47 @@ text = "Page name"
 align = 1
 valign = 1
 
-[node name="VotingLabel" type="Label" parent="VBoxContainer"]
-visible = false
-margin_top = 58.0
-margin_right = 1024.0
-margin_bottom = 112.0
-text = "Time to vote!"
-align = 1
-valign = 1
-
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
 visible = false
-margin_top = 302.0
+margin_top = 122.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 columns = 2
 
-[node name="PopupPresenting" type="PopupPanel" parent="."]
-margin_left = 73.0
-margin_top = 97.0
-margin_right = 941.0
-margin_bottom = 527.0
-__meta__ = {
-"_edit_group_": true
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="PopupPresenting"]
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 864.0
-margin_bottom = 426.0
+[node name="PresentingVBox" type="VBoxContainer" parent="VBoxContainer"]
+visible = false
+margin_top = 58.0
+margin_right = 1024.0
+margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TextureRect" type="TextureRect" parent="PopupPresenting/VBoxContainer"]
-margin_right = 868.0
-margin_bottom = 308.0
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/PresentingVBox"]
+margin_right = 1024.0
+margin_bottom = 420.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 expand = true
 stretch_mode = 6
 
-[node name="PopupItemLabel" type="Label" parent="PopupPresenting/VBoxContainer"]
-margin_top = 312.0
-margin_right = 868.0
-margin_bottom = 366.0
+[node name="PresentingItemLabel" type="Label" parent="VBoxContainer/PresentingVBox"]
+margin_top = 424.0
+margin_right = 1024.0
+margin_bottom = 478.0
 text = "Item name"
 align = 1
 valign = 1
 autowrap = true
 
-[node name="BtPresentNext" type="Button" parent="PopupPresenting/VBoxContainer"]
-margin_left = 381.0
-margin_top = 370.0
-margin_right = 486.0
-margin_bottom = 430.0
+[node name="BtPresentNext" type="Button" parent="VBoxContainer/PresentingVBox"]
+margin_left = 459.0
+margin_top = 482.0
+margin_right = 564.0
+margin_bottom = 542.0
 size_flags_horizontal = 4
 size_flags_vertical = 5
 text = "Next"
 
-[connection signal="pressed" from="PopupPresenting/VBoxContainer/BtPresentNext" to="." method="_on_BtPresentNext_pressed"]
+[connection signal="pressed" from="VBoxContainer/PresentingVBox/BtPresentNext" to="." method="_on_BtPresentNext_pressed"]

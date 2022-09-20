@@ -2,18 +2,29 @@ extends Control
 
 export(PackedScene) var vote_page_scene:PackedScene
 
-var vote_state:String = "intro"
 var current_page_index:int = 0
 var vote_results:Dictionary = {}
 var current_page_node:VotePage = null
 
 onready var keep_alive_timer:Timer = $KeepAliveTimer
 onready var error_popup:Popup = $PopupError
-onready var vote_name_label:Label = $VoteIntro/VoteNameLabel
-onready var vote_code_label:Label = $VoteIntro/HBoxContainer/VoteCodeLabel
-onready var client_count_label:Label = $VoteIntro/HBoxContainer/ClientCountLabel
-onready var intro_container:Control = $VoteIntro
-onready var vote_page_container:Control = $VotePages
+
+onready var hoster_vbox:Control = $HosterVBox
+onready var intro_container:Control = $HosterVBox/IntroContainer
+onready var intro_info_container:Control = $HosterVBox/IntroContainer/IntroInfoContainer
+
+onready var vote_page_container:Control = $HosterVBox/VotePages
+onready var vote_name_label:Label = $HosterVBox/IntroContainer/VoteNameLabel
+onready var vote_code_label:Label = $HosterVBox/IntroContainer/IntroInfoContainer/VoteCodeLabel
+onready var client_count_label:Label = $HosterVBox/IntroContainer/IntroInfoContainer/ClientCountLabel
+
+onready var voting_info_box:Control = $HosterVBox/VotingInfoVBox
+onready var voting_info_label:Label = $HosterVBox/VotingInfoVBox/VotingInfoLabel
+onready var voting_finish_button:Button = $HosterVBox/VotingInfoVBox/FinishVoteButton
+onready var voting_retry_button:Button = $HosterVBox/VotingInfoVBox/RetryVoteButton
+onready var voting_next_button:Button = $HosterVBox/VotingInfoVBox/NextPageButton
+
+onready var results_tab_container:TabContainer = $HosterVBox/ResultsTabContainer
 
 
 func _ready() -> void:
@@ -27,10 +38,8 @@ func _error(error_text:String) -> void:
 	error_popup.popup_centered()
 
 func _on_viewport_size_changed() -> void:
-	intro_container.rect_size = get_viewport_rect().size
-	vote_page_container.rect_size = get_viewport_rect().size
-	for child in vote_page_container.get_children():
-		child.rect_size = vote_page_container.rect_size
+	hoster_vbox.rect_position = Vector2(16, 16)
+	hoster_vbox.rect_size = get_viewport_rect().size - Vector2(32, 32)
 
 func _load_vote_pages() -> void:
 	var vote_pages:Dictionary = Global.active_vote_data["vote_pages"]
@@ -38,6 +47,7 @@ func _load_vote_pages() -> void:
 		var vote_page:Dictionary = vote_pages[String(page_index)]
 		var vote_page_instance:VotePage = vote_page_scene.instance()
 		vote_page_container.add_child(vote_page_instance)
+		vote_page_instance.connect("finished_presenting", self, "_on_finished_presenting")
 		vote_page_instance.set_page_name(vote_page["page_name"])
 		for item_index in range(len(vote_page["page_items"])):
 			vote_page_instance.visible = false
@@ -92,7 +102,8 @@ func _on_keep_vote_request_completed(_result:int, _response_code:int, _headers:P
 
 func _on_StartVoteButton_pressed() -> void:
 	current_page_index = 0
-	intro_container.visible = false
+	intro_info_container.visible = false
+	intro_container.size_flags_vertical = SIZE_FILL
 	vote_page_container.visible = true
 	_present_page()
 
@@ -101,5 +112,161 @@ func _present_page() -> void:
 		for child in vote_page_container.get_children():
 			child.visible = false
 		current_page_node = vote_page_container.get_child(current_page_index)
-		current_page_node.visible = true
-		current_page_node.start_presenting()
+		_update_vote_presenting()
+	else:
+		_display_results_screen()
+
+func _update_vote_presenting() -> void:
+	var query:String = JSON.print(
+			{
+				"state": "presenting",
+				"vote_name": Global.active_vote_data["vote_name"],
+				"page_name": current_page_node.get_page_name(),
+				"vote_items": {}
+			}
+		)
+	var headers:PoolStringArray = ["Content-Type: application/json"]
+	var endpoint:String = "/update-active-vote/" + Global.active_vote_code
+	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
+	var http:HTTPRequest = HTTPRequest.new()
+	self.add_child(http)
+	http.connect("request_completed", self, "_on_update_vote_presenting_request_completed")
+	http.request(request_url, headers, true, HTTPClient.METHOD_POST, query)
+
+func _on_update_vote_presenting_request_completed(
+	_result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray
+	) -> void:
+	var json:JSONParseResult = JSON.parse(body.get_string_from_utf8())
+	if json.result:
+		var response:Dictionary = json.result
+		if response["error"] == "OK":
+			current_page_node.visible = true
+			voting_info_box.visible = false
+			current_page_node.start_presenting()
+		else:
+			_error(response["message"])
+	else:
+		_error("Server not responding")
+
+
+func _on_finished_presenting() -> void:
+	_update_vote_voting()
+
+func _update_vote_voting() -> void:
+	var query:String = JSON.print(
+			{
+				"state": "voting",
+				"vote_name": Global.active_vote_data["vote_name"],
+				"page_name": current_page_node.get_page_name(),
+				"vote_items": current_page_node.get_vote_items()
+			}
+		)
+	var headers:PoolStringArray = ["Content-Type: application/json"]
+	var endpoint:String = "/update-active-vote/" + Global.active_vote_code
+	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
+	var http:HTTPRequest = HTTPRequest.new()
+	self.add_child(http)
+	http.connect("request_completed", self, "_on_update_vote_voting_request_completed")
+	http.request(request_url, headers, true, HTTPClient.METHOD_POST, query)
+
+func _on_update_vote_voting_request_completed(
+	_result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray
+	) -> void:
+	var json:JSONParseResult = JSON.parse(body.get_string_from_utf8())
+	if json.result:
+		var response:Dictionary = json.result
+		if response["error"] == "OK":
+			voting_info_label.text = "Voting... 0/0"
+			voting_finish_button.visible = true
+			voting_retry_button.visible = false
+			voting_next_button.visible = false
+		else:
+			voting_info_label.text = "Error starting vote"
+			voting_finish_button.visible = false
+			voting_retry_button.visible = true
+			voting_next_button.visible = false
+			_error(response["message"])
+	else:
+		voting_info_label.text = "Error starting vote"
+		voting_finish_button.visible = false
+		voting_retry_button.visible = true
+		voting_next_button.visible = false
+		_error("Server not responding")
+	voting_info_box.visible = true
+
+
+func _on_FinishVoteButton_pressed() -> void:
+	var endpoint:String = "/get-active-vote/" + Global.active_vote_code
+	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
+	var http:HTTPRequest = HTTPRequest.new()
+	self.add_child(http)
+	http.connect("request_completed", self, "_on_finish_vote_request_completed")
+	http.request(request_url)
+
+func _on_finish_vote_request_completed(
+	_result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray
+	) -> void:
+	var json:JSONParseResult = JSON.parse(body.get_string_from_utf8())
+	if json.result:
+		var response:Dictionary = json.result
+		if response["error"] == "OK":
+			_display_page_winners(response["data"])
+			# voting_info_box.visible = false
+		else:
+			_error(response["message"])
+	else:
+		_error("Server not responding")
+
+func _sort_by_votes(a, b) -> bool:
+	if int(a[1]["item_votes"]) > int(b[1]["item_votes"]):
+		return true
+	return false
+
+func _get_winner_ids(sorted_vote_items:Array) -> PoolIntArray:
+	var winner_ids:PoolIntArray = []
+	for index in range(len(sorted_vote_items)):
+		if index == 0:
+			winner_ids.append(sorted_vote_items[index][0])
+		else:
+			if sorted_vote_items[index][1]["item_votes"] == sorted_vote_items[index-1][1]["item_votes"]:
+				winner_ids.append(sorted_vote_items[index][0])
+			else:
+				break
+	return winner_ids
+
+func _display_page_winners(active_vote_data:Dictionary) -> void:
+	var vote_items:Dictionary = active_vote_data["vote_items"]
+	current_page_node.display_votes(vote_items)
+	var vote_items_array:Array = []
+	for vote_item_id in vote_items:
+		vote_items_array.append([vote_item_id, vote_items[vote_item_id]])
+	vote_items_array.sort_custom(self, "_sort_by_votes")
+	var winner_ids:PoolIntArray = _get_winner_ids(vote_items_array)
+	current_page_node.dislpay_winners(winner_ids)
+	if len(winner_ids) > 1:
+		voting_info_label.text = "It's a tie!"
+	else:
+		voting_info_label.text = "We have a winner!"
+	voting_finish_button.visible = false
+	voting_retry_button.visible = false
+	voting_next_button.visible = true
+
+
+func _on_NextPageButton_pressed() -> void:
+	current_page_index += 1
+	if vote_page_container.get_child_count() == current_page_index+1:
+		voting_next_button.text = "View results"
+	_present_page()
+
+
+func _display_results_screen() -> void:
+	var index:int = 1
+	for page_node in vote_page_container.get_children():
+		page_node.display_all()
+		page_node.set_name("Page " + String(index))
+		vote_page_container.remove_child(page_node)
+		results_tab_container.add_child(page_node)
+		index += 1
+	vote_page_container.visible = false
+	voting_info_box.visible = false
+	results_tab_container.visible = true

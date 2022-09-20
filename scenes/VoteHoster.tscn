@@ -23,13 +23,17 @@ vote_page_scene = ExtResource( 4 )
 [node name="KeepAliveTimer" type="Timer" parent="."]
 wait_time = 60.0
 
-[node name="VoteIntro" type="VBoxContainer" parent="."]
+[node name="HosterVBox" type="VBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+
+[node name="IntroContainer" type="VBoxContainer" parent="HosterVBox"]
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VoteNameLabel" type="Label" parent="VoteIntro"]
+[node name="VoteNameLabel" type="Label" parent="HosterVBox/IntroContainer"]
 margin_right = 1024.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
@@ -40,14 +44,14 @@ align = 1
 valign = 2
 autowrap = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VoteIntro"]
+[node name="IntroInfoContainer" type="HBoxContainer" parent="HosterVBox/IntroContainer"]
 margin_top = 302.0
 margin_right = 1024.0
 margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VoteCodeLabel" type="Label" parent="VoteIntro/HBoxContainer"]
+[node name="VoteCodeLabel" type="Label" parent="HosterVBox/IntroContainer/IntroInfoContainer"]
 margin_right = 338.0
 margin_bottom = 298.0
 size_flags_horizontal = 3
@@ -58,7 +62,7 @@ loading..."
 align = 1
 valign = 1
 
-[node name="StartVoteButton" type="Button" parent="VoteIntro/HBoxContainer"]
+[node name="StartVoteButton" type="Button" parent="HosterVBox/IntroContainer/IntroInfoContainer"]
 margin_left = 411.0
 margin_top = 119.0
 margin_right = 611.0
@@ -67,7 +71,7 @@ size_flags_horizontal = 6
 size_flags_vertical = 6
 text = "Start Vote"
 
-[node name="ClientCountLabel" type="Label" parent="VoteIntro/HBoxContainer"]
+[node name="ClientCountLabel" type="Label" parent="HosterVBox/IntroContainer/IntroInfoContainer"]
 margin_left = 685.0
 margin_right = 1024.0
 margin_bottom = 298.0
@@ -78,6 +82,56 @@ align = 1
 valign = 1
 autowrap = true
 
+[node name="VotePages" type="Control" parent="HosterVBox"]
+visible = false
+margin_top = 302.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VotingInfoVBox" type="HBoxContainer" parent="HosterVBox"]
+visible = false
+margin_top = 540.0
+margin_right = 1024.0
+margin_bottom = 600.0
+
+[node name="VotingInfoLabel" type="Label" parent="HosterVBox/VotingInfoVBox"]
+margin_right = 750.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "Voting..."
+valign = 1
+
+[node name="FinishVoteButton" type="Button" parent="HosterVBox/VotingInfoVBox"]
+margin_left = 754.0
+margin_right = 1024.0
+margin_bottom = 60.0
+text = "Finish Voting"
+
+[node name="RetryVoteButton" type="Button" parent="HosterVBox/VotingInfoVBox"]
+visible = false
+margin_left = 645.0
+margin_right = 1024.0
+margin_bottom = 60.0
+text = "Retry Starting Vote"
+
+[node name="NextPageButton" type="Button" parent="HosterVBox/VotingInfoVBox"]
+visible = false
+margin_left = 814.0
+margin_right = 1024.0
+margin_bottom = 60.0
+text = "Next Page"
+
+[node name="ResultsTabContainer" type="TabContainer" parent="HosterVBox"]
+visible = false
+margin_top = 302.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="PopupError" type="AcceptDialog" parent="."]
 margin_left = 305.0
 margin_top = 218.0
@@ -87,10 +141,8 @@ window_title = "Server error!"
 dialog_text = "Error"
 dialog_autowrap = true
 
-[node name="VotePages" type="Control" parent="."]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-
 [connection signal="timeout" from="KeepAliveTimer" to="." method="_on_KeepAliveTimer_timeout"]
-[connection signal="pressed" from="VoteIntro/HBoxContainer/StartVoteButton" to="." method="_on_StartVoteButton_pressed"]
+[connection signal="pressed" from="HosterVBox/IntroContainer/IntroInfoContainer/StartVoteButton" to="." method="_on_StartVoteButton_pressed"]
+[connection signal="pressed" from="HosterVBox/VotingInfoVBox/FinishVoteButton" to="." method="_on_FinishVoteButton_pressed"]
+[connection signal="pressed" from="HosterVBox/VotingInfoVBox/RetryVoteButton" to="." method="_on_finished_presenting"]
+[connection signal="pressed" from="HosterVBox/VotingInfoVBox/NextPageButton" to="." method="_on_NextPageButton_pressed"]
