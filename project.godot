@@ -40,7 +40,7 @@ _global_script_class_icons={
 
 config/name="live-voter-client"
 run/main_scene="res://scenes/Menu.tscn"
-config/icon="res://icon.png"
+config/icon="res://ui/icons/no_image.png"
 
 [autoload]
 

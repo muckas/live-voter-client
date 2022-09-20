@@ -1,6 +1,8 @@
 extends Control
 class_name VoteItem
 
+signal fullscreen_popup
+
 onready var vbox:VBoxContainer = $VBoxContainer
 onready var texture_rect:TextureRect = $VBoxContainer/TextureRect
 onready var name_label:Label = $VBoxContainer/HBoxContainer/NameLabel
@@ -34,6 +36,9 @@ func set_votes(num:int) -> void:
 func _on_self_resized() -> void:
 	vbox.rect_size = rect_size
 
+func _on_FullscreenButton_pressed():
+	emit_signal("fullscreen_popup", name_label.text, texture_rect.texture)
+
 func _on_image_request_completed(_result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray) -> void:
 	var image:Image = Image.new()
 	var image_error:int = image.load_png_from_buffer(body)
@@ -42,3 +47,4 @@ func _on_image_request_completed(_result:int, _response_code:int, _headers:PoolS
 	var texture:ImageTexture = ImageTexture.new()
 	texture.create_from_image(image)
 	texture_rect.texture = texture
+

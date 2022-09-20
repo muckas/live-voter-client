@@ -8,6 +8,7 @@ var current_page_node:VotePage = null
 
 onready var keep_alive_timer:Timer = $KeepAliveTimer
 onready var error_popup:Popup = $PopupError
+onready var exit_popup:Popup = $ExitPopup
 
 onready var hoster_vbox:Control = $HosterVBox
 onready var intro_container:Control = $HosterVBox/IntroContainer
@@ -40,6 +41,15 @@ func _error(error_text:String) -> void:
 func _on_viewport_size_changed() -> void:
 	hoster_vbox.rect_position = Vector2(16, 16)
 	hoster_vbox.rect_size = get_viewport_rect().size - Vector2(32, 32)
+
+func _on_FullscreenButton_pressed():
+	OS.window_fullscreen = !OS.window_fullscreen
+
+func _on_ExitButton_pressed():
+	exit_popup.popup_centered()
+
+func _on_ExitPopup_confirmed():
+	get_tree().change_scene("res://scenes/Menu.tscn")
 
 func _load_vote_pages() -> void:
 	var vote_pages:Dictionary = Global.active_vote_data["vote_pages"]
@@ -270,3 +280,5 @@ func _display_results_screen() -> void:
 	vote_page_container.visible = false
 	voting_info_box.visible = false
 	results_tab_container.visible = true
+
+

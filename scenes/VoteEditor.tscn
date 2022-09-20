@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://ui/themes/main_theme.tres" type="Theme" id=1]
+[ext_resource path="res://ui/themes/editor_theme.tres" type="Theme" id=1]
 [ext_resource path="res://scenes/VoteEditor.gd" type="Script" id=2]
 [ext_resource path="res://objects/VotePageEdit.tscn" type="PackedScene" id=3]
 

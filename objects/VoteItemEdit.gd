@@ -1,6 +1,8 @@
 extends Control
 class_name VoteItemEdit
 
+signal item_removed
+
 var name_hover:bool = false
 
 onready var vbox:VBoxContainer = $VBoxContainer
@@ -50,6 +52,7 @@ func _on_NameEdit_text_entered(_new_text:String) -> void:
 	name_edit.visible = false
 
 func _on_BtRemove_pressed() -> void:
+	emit_signal("item_removed")
 	queue_free()
 
 func _on_BtLoadImage_pressed() -> void:

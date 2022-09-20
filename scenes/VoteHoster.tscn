@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://ui/themes/main_theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/fonts/times.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://scenes/VoteHoster.gd" type="Script" id=3]
 [ext_resource path="res://objects/VotePage.tscn" type="PackedScene" id=4]
+[ext_resource path="res://ui/icons/fullscreen.png" type="Texture" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
@@ -132,6 +133,17 @@ margin_bottom = 600.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="FullscreenButton" type="Button" parent="."]
+margin_top = 70.0
+margin_right = 76.0
+margin_bottom = 140.0
+icon = ExtResource( 5 )
+
+[node name="ExitButton" type="Button" parent="."]
+margin_right = 91.0
+margin_bottom = 70.0
+text = "Exit"
+
 [node name="PopupError" type="AcceptDialog" parent="."]
 margin_left = 305.0
 margin_top = 218.0
@@ -141,8 +153,19 @@ window_title = "Server error!"
 dialog_text = "Error"
 dialog_autowrap = true
 
+[node name="ExitPopup" type="ConfirmationDialog" parent="."]
+margin_left = 283.0
+margin_top = 213.0
+margin_right = 698.0
+margin_bottom = 390.0
+window_title = "Are you sure?"
+dialog_text = "Stop the vote and exit?"
+
 [connection signal="timeout" from="KeepAliveTimer" to="." method="_on_KeepAliveTimer_timeout"]
 [connection signal="pressed" from="HosterVBox/IntroContainer/IntroInfoContainer/StartVoteButton" to="." method="_on_StartVoteButton_pressed"]
 [connection signal="pressed" from="HosterVBox/VotingInfoVBox/FinishVoteButton" to="." method="_on_FinishVoteButton_pressed"]
 [connection signal="pressed" from="HosterVBox/VotingInfoVBox/RetryVoteButton" to="." method="_on_finished_presenting"]
 [connection signal="pressed" from="HosterVBox/VotingInfoVBox/NextPageButton" to="." method="_on_NextPageButton_pressed"]
+[connection signal="pressed" from="FullscreenButton" to="." method="_on_FullscreenButton_pressed"]
+[connection signal="pressed" from="ExitButton" to="." method="_on_ExitButton_pressed"]
+[connection signal="confirmed" from="ExitPopup" to="." method="_on_ExitPopup_confirmed"]
