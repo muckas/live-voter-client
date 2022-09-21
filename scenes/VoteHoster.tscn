@@ -26,7 +26,11 @@ script = ExtResource( 3 )
 vote_page_scene = ExtResource( 4 )
 
 [node name="KeepAliveTimer" type="Timer" parent="."]
-wait_time = 60.0
+wait_time = 30.0
+
+[node name="VoteInfoTimer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
 
 [node name="HosterVBox" type="VBoxContainer" parent="."]
 margin_right = 1024.0
@@ -173,6 +177,7 @@ window_title = "Are you sure?"
 dialog_text = "Stop the vote and exit?"
 
 [connection signal="timeout" from="KeepAliveTimer" to="." method="_on_KeepAliveTimer_timeout"]
+[connection signal="timeout" from="VoteInfoTimer" to="." method="_on_VoteInfoTimer_timeout"]
 [connection signal="pressed" from="HosterVBox/IntroContainer/IntroInfoContainer/StartVoteButton" to="." method="_on_StartVoteButton_pressed"]
 [connection signal="pressed" from="HosterVBox/VotingInfoVBox/FinishVoteButton" to="." method="_on_FinishVoteButton_pressed"]
 [connection signal="pressed" from="HosterVBox/VotingInfoVBox/RetryVoteButton" to="." method="_on_finished_presenting"]

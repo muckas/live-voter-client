@@ -317,4 +317,39 @@ func _display_results_screen() -> void:
 	voting_info_box.visible = false
 	results_tab_container.visible = true
 
+func _on_VoteInfoTimer_timeout() -> void:
+	var query:String = JSON.print(
+			{
+				"id": Global.client_id,
+			}
+		)
+	var headers:PoolStringArray = ["Content-Type: application/json"]
+	var endpoint:String = "/get-active-vote/" + Global.active_vote_code
+	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
+	var http:HTTPRequest = HTTPRequest.new()
+	self.add_child(http)
+	http.connect("request_completed", self, "_on_vote_info_request_completed")
+	http.request(request_url, headers, true, HTTPClient.METHOD_POST, query)
 
+func _on_vote_info_request_completed(
+	_result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray
+	) -> void:
+	var json:JSONParseResult = JSON.parse(body.get_string_from_utf8())
+	if json.result:
+		var response:Dictionary = json.result
+		if response["error"] == "OK":
+			_update_vote_info(response["data"])
+		else:
+			_error(response["message"])
+	else:
+		_error("Server not responding")
+
+func _update_vote_info(vote_data:Dictionary) -> void:
+	match vote_data["state"]:
+		"intro":
+			client_count_label.text = "Connected clients: " + String(vote_data["client_count"])
+		"voting":
+			var total_votes:int = 0
+			for item_id in vote_data["vote_items"]:
+				total_votes += vote_data["vote_items"][item_id]["item_votes"]
+			voting_info_label.text = "Voting... " + String(total_votes) + "/" + String(vote_data["client_count"])
