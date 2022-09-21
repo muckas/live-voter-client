@@ -2,6 +2,9 @@ extends Node
 
 const VERSION = "0.3.0"
 
+const uuid_util = preload("res://global/uuid_util.gd")
+
+var client_id:String = uuid_util.v4()
 var server_url:String = "http://localhost"
 var server_port:int = 8080
 var server_ok:bool = false

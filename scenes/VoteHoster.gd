@@ -68,7 +68,10 @@ func _load_vote_pages() -> void:
 				)
 
 func _request_vote_code() -> void:
-	var query:String = JSON.print({"vote_name": Global.active_vote_data["vote_name"]})
+	var query:String = JSON.print({
+		"host_id": Global.client_id,
+		"vote_name": Global.active_vote_data["vote_name"]
+		})
 	var headers:PoolStringArray = ["Content-Type: application/json"]
 	var endpoint:String = "/host-vote"
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
@@ -129,10 +132,13 @@ func _present_page() -> void:
 func _update_vote_presenting() -> void:
 	var query:String = JSON.print(
 			{
-				"state": "presenting",
-				"vote_name": Global.active_vote_data["vote_name"],
-				"page_name": current_page_node.get_page_name(),
-				"vote_items": {}
+				"host_id": Global.client_id,
+				"vote_data": {
+					"state": "presenting",
+					"vote_name": Global.active_vote_data["vote_name"],
+					"page_name": current_page_node.get_page_name(),
+					"vote_items": {}
+				},
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]
@@ -165,10 +171,13 @@ func _on_finished_presenting() -> void:
 func _update_vote_voting() -> void:
 	var query:String = JSON.print(
 			{
-				"state": "voting",
-				"vote_name": Global.active_vote_data["vote_name"],
-				"page_name": current_page_node.get_page_name(),
-				"vote_items": current_page_node.get_vote_items()
+				"host_id": Global.client_id,
+				"vote_data": {
+					"state": "voting",
+					"vote_name": Global.active_vote_data["vote_name"],
+					"page_name": current_page_node.get_page_name(),
+					"vote_items": current_page_node.get_vote_items()
+				},
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]

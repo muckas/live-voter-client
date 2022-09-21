@@ -94,7 +94,7 @@ func _on_BtVoteName_pressed() -> void:
 
 func _on_VoteNameEdit_text_entered(_new_text:String) -> void:
 	vote_name_button.text = vote_name_edit.text
-	vote_name_button.sdasvisible = true
+	vote_name_button.visible = true
 	vote_name_edit.visible = false
 
 
