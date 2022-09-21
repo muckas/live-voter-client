@@ -1,0 +1,72 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/themes/main_theme.tres" type="Theme" id=1]
+[ext_resource path="res://scenes/VoteJoiner.gd" type="Script" id=2]
+
+[node name="VoteJoiner" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="VoteRequestTimer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_right = 442.0
+margin_bottom = 600.0
+custom_constants/separation = 16
+
+[node name="VoteNameLabel" type="Label" parent="VBoxContainer"]
+margin_right = 442.0
+margin_bottom = 54.0
+text = "Vote Name"
+align = 1
+valign = 1
+
+[node name="PageNameLabel" type="Label" parent="VBoxContainer"]
+margin_top = 70.0
+margin_right = 442.0
+margin_bottom = 124.0
+text = "Page Name"
+align = 1
+valign = 1
+
+[node name="VoteStatusLabel" type="Label" parent="VBoxContainer"]
+margin_top = 140.0
+margin_right = 442.0
+margin_bottom = 194.0
+text = "Vote Status"
+align = 1
+valign = 1
+
+[node name="VoteItemsScroll" type="ScrollContainer" parent="VBoxContainer"]
+margin_top = 210.0
+margin_right = 442.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VoteItemsVBox" type="VBoxContainer" parent="VBoxContainer/VoteItemsScroll"]
+margin_right = 442.0
+margin_bottom = 390.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 32
+
+[node name="PopupError" type="AcceptDialog" parent="."]
+margin_left = 34.0
+margin_top = 180.0
+margin_right = 408.0
+margin_bottom = 318.0
+
+[node name="ConfirmVotePopup" type="ConfirmationDialog" parent="."]
+margin_left = 33.0
+margin_top = 180.0
+margin_right = 413.0
+margin_bottom = 339.0
+window_title = "Confirm Vote"
+
+[connection signal="timeout" from="VoteRequestTimer" to="." method="_on_VoteRequestTimer_timeout"]
+[connection signal="confirmed" from="ConfirmVotePopup" to="." method="_on_ConfirmVotePopup_confirmed"]

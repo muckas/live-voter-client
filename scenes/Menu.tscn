@@ -145,9 +145,57 @@ margin_bottom = 131.0
 align = 1
 placeholder_text = "Vote id"
 
+[node name="PopupJoinVote" type="PopupPanel" parent="."]
+margin_left = 248.0
+margin_top = 204.0
+margin_right = 709.0
+margin_bottom = 340.0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupJoinVote"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 457.0
+margin_bottom = 132.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PopupJoinVote/VBoxContainer"]
+margin_right = 453.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="JoinVoteLabel" type="Label" parent="PopupJoinVote/VBoxContainer/HBoxContainer"]
+margin_right = 299.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "Enter vote code"
+align = 1
+valign = 1
+
+[node name="JoinVoteSubmit" type="Button" parent="PopupJoinVote/VBoxContainer/HBoxContainer"]
+margin_left = 303.0
+margin_right = 453.0
+margin_bottom = 60.0
+text = "Submit"
+
+[node name="JoinVoteEdit" type="LineEdit" parent="PopupJoinVote/VBoxContainer"]
+margin_top = 64.0
+margin_right = 453.0
+margin_bottom = 128.0
+align = 1
+max_length = 4
+placeholder_text = "CODE"
+
 [connection signal="timeout" from="ViewportTimer" to="." method="_on_viewport_size_changed"]
 [connection signal="pressed" from="HFlowContainer/BtHostVote" to="." method="_on_BtHostVote_pressed"]
+[connection signal="pressed" from="HFlowContainer/BtJoinVote" to="." method="_on_BtJoinVote_pressed"]
 [connection signal="pressed" from="HFlowContainer/BtVoteEditor" to="." method="_on_BtVoteEditor_pressed"]
 [connection signal="pressed" from="HFlowContainer/PortContainer/BtConnect" to="." method="_on_server_connect"]
 [connection signal="pressed" from="PopupHostVote/VBoxContainer/HBoxContainer/HostVoteSubmit" to="." method="_on_HostVoteEdit_text_entered" binds= [ "" ]]
 [connection signal="text_entered" from="PopupHostVote/VBoxContainer/HostVoteEdit" to="." method="_on_HostVoteEdit_text_entered"]
+[connection signal="pressed" from="PopupJoinVote/VBoxContainer/HBoxContainer/JoinVoteSubmit" to="." method="_on_JoinVoteEdit_text_entered" binds= [ "" ]]
+[connection signal="text_changed" from="PopupJoinVote/VBoxContainer/JoinVoteEdit" to="." method="_on_JoinVoteEdit_text_changed"]
+[connection signal="text_entered" from="PopupJoinVote/VBoxContainer/JoinVoteEdit" to="." method="_on_JoinVoteEdit_text_entered"]

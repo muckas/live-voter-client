@@ -11,6 +11,8 @@ onready var server_addres_edit:LineEdit = $HFlowContainer/ServerAddress
 onready var server_port_edit:SpinBox = $HFlowContainer/PortContainer/ServerPort
 onready var host_vote_popup:Popup = $PopupHostVote
 onready var host_vote_edit:LineEdit = $PopupHostVote/VBoxContainer/HostVoteEdit
+onready var join_vote_popup:Popup = $PopupJoinVote
+onready var join_vote_edit:LineEdit = $PopupJoinVote/VBoxContainer/JoinVoteEdit
 
 func _ready() -> void:
 	get_tree().root.connect("size_changed", self, "_on_viewport_size_changed")
@@ -76,6 +78,46 @@ func _on_host_vote_request_completed(result:int, _response_code:int, _headers:Po
 			get_tree().change_scene("res://scenes/VoteHoster.tscn")
 		else:
 			error_popup.dialog_text = "Vote not found"
+			error_popup.popup_centered()
+	else:
+		error_popup.dialog_text = "Server not responding"
+		error_popup.popup_centered()
+
+
+func _on_BtJoinVote_pressed():
+	join_vote_edit.text = ""
+	join_vote_popup.popup_centered()
+	join_vote_edit.grab_focus()
+
+func _on_JoinVoteEdit_text_changed(_new_text):
+	join_vote_edit.text = join_vote_edit.text.to_upper()
+	join_vote_edit.caret_position = len(join_vote_edit.text)
+
+func _on_JoinVoteEdit_text_entered(_new_text:String) -> void:
+	join_vote_popup.visible = false
+	var vote_code:String = join_vote_edit.text.to_lower()
+	Global.active_vote_code = vote_code
+	var query:String = JSON.print({
+		"id": Global.client_id,
+		})
+	var headers:PoolStringArray = ["Content-Type: application/json"]
+	var endpoint:String = "/join-vote/" + vote_code
+	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
+	var http:HTTPRequest = HTTPRequest.new()
+	self.add_child(http)
+	http.connect("request_completed", self, "_on_join_vote_request_completed")
+	http.request(request_url, headers, true, HTTPClient.METHOD_POST, query)
+
+func _on_join_vote_request_completed(result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray) -> void:
+	var json:JSONParseResult = JSON.parse(body.get_string_from_utf8())
+	if result == HTTPRequest.RESULT_SUCCESS:
+		var response:Dictionary = json.result
+		if response["error"] == "OK":
+			var vote_data:Dictionary = response["data"]
+			Global.active_vote_data = vote_data
+			get_tree().change_scene("res://scenes/VoteJoiner.tscn")
+		else:
+			error_popup.dialog_text = response["message"]
 			error_popup.popup_centered()
 	else:
 		error_popup.dialog_text = "Server not responding"

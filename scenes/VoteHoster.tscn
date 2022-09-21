@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://ui/themes/main_theme.tres" type="Theme" id=1]
 [ext_resource path="res://ui/fonts/times.ttf" type="DynamicFontData" id=2]
@@ -12,6 +12,10 @@ font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 48
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 32
 font_data = ExtResource( 2 )
 
 [node name="VoteHoster" type="Control"]
@@ -143,6 +147,13 @@ icon = ExtResource( 5 )
 margin_right = 91.0
 margin_bottom = 70.0
 text = "Exit"
+
+[node name="CodeLabel" type="Label" parent="."]
+margin_left = 91.0
+margin_right = 178.0
+margin_bottom = 36.0
+custom_fonts/font = SubResource( 3 )
+text = "CODE"
 
 [node name="PopupError" type="AcceptDialog" parent="."]
 margin_left = 305.0

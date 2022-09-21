@@ -9,6 +9,7 @@ var current_page_node:VotePage = null
 onready var keep_alive_timer:Timer = $KeepAliveTimer
 onready var error_popup:Popup = $PopupError
 onready var exit_popup:Popup = $ExitPopup
+onready var code_label:Label = $CodeLabel
 
 onready var hoster_vbox:Control = $HosterVBox
 onready var intro_container:Control = $HosterVBox/IntroContainer
@@ -87,6 +88,7 @@ func _on_host_vote_request_completed(_result:int, _response_code:int, _headers:P
 		if response["error"] == "OK":
 			Global.active_vote_code = response["message"]
 			vote_code_label.text = "Vote code\n" + Global.active_vote_code.to_upper()
+			code_label.text = Global.active_vote_code.to_upper()
 			keep_alive_timer.start()
 			_load_vote_pages()
 		else:
@@ -127,7 +129,27 @@ func _present_page() -> void:
 		current_page_node = vote_page_container.get_child(current_page_index)
 		_update_vote_presenting()
 	else:
+		_update_vote_outro()
 		_display_results_screen()
+
+func _update_vote_outro() -> void:
+	var query:String = JSON.print(
+			{
+				"host_id": Global.client_id,
+				"vote_data": {
+					"state": "outro",
+					"vote_name": Global.active_vote_data["vote_name"],
+					"page_name": "",
+					"vote_items": {}
+				},
+			}
+		)
+	var headers:PoolStringArray = ["Content-Type: application/json"]
+	var endpoint:String = "/update-active-vote/" + Global.active_vote_code
+	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
+	var http:HTTPRequest = HTTPRequest.new()
+	self.add_child(http)
+	http.request(request_url, headers, true, HTTPClient.METHOD_POST, query)
 
 func _update_vote_presenting() -> void:
 	var query:String = JSON.print(
@@ -215,12 +237,18 @@ func _on_update_vote_voting_request_completed(
 
 
 func _on_FinishVoteButton_pressed() -> void:
+	var query:String = JSON.print(
+			{
+				"id": Global.client_id,
+			}
+		)
+	var headers:PoolStringArray = ["Content-Type: application/json"]
 	var endpoint:String = "/get-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
 	http.connect("request_completed", self, "_on_finish_vote_request_completed")
-	http.request(request_url)
+	http.request(request_url, headers, true, HTTPClient.METHOD_POST, query)
 
 func _on_finish_vote_request_completed(
 	_result:int, _response_code:int, _headers:PoolStringArray, body:PoolByteArray
@@ -230,7 +258,6 @@ func _on_finish_vote_request_completed(
 		var response:Dictionary = json.result
 		if response["error"] == "OK":
 			_display_page_winners(response["data"])
-			# voting_info_box.visible = false
 		else:
 			_error(response["message"])
 	else:

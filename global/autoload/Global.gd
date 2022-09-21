@@ -1,6 +1,6 @@
 extends Node
 
-const VERSION = "0.3.0"
+const VERSION = "0.4.0"
 
 const uuid_util = preload("res://global/uuid_util.gd")
 
