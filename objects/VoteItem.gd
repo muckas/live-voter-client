@@ -22,7 +22,7 @@ func get_item_texture() -> Texture:
 	return texture_rect.texture
 
 func set_item_image(page_index:int, item_index:int) -> void:
-	var endpoint:String = "/image/" + Global.active_vote_id + "/" + String(page_index) + "_" + String(item_index)
+	var endpoint:String = Global.api_path + "image/" + Global.active_vote_id + "/" + String(page_index) + "_" + String(item_index)
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
 	http.connect("request_completed", self, "_on_image_request_completed")

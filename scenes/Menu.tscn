@@ -58,10 +58,17 @@ margin_bottom = 304.0
 size_flags_horizontal = 3
 text = "server_url"
 
-[node name="PortContainer" type="HSplitContainer" parent="HFlowContainer"]
+[node name="ApiPath" type="LineEdit" parent="HFlowContainer"]
 margin_top = 324.0
 margin_right = 353.0
 margin_bottom = 388.0
+size_flags_horizontal = 3
+text = "server_url"
+
+[node name="PortContainer" type="HSplitContainer" parent="HFlowContainer"]
+margin_top = 408.0
+margin_right = 353.0
+margin_bottom = 472.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -80,17 +87,17 @@ margin_bottom = 64.0
 text = "Connect"
 
 [node name="ServerLabel" type="Label" parent="HFlowContainer"]
-margin_top = 408.0
+margin_top = 492.0
 margin_right = 353.0
-margin_bottom = 462.0
+margin_bottom = 546.0
 size_flags_horizontal = 3
 text = "Connecting..."
 align = 1
 
 [node name="VersionLabel" type="Label" parent="HFlowContainer"]
-margin_top = 482.0
+margin_top = 566.0
 margin_right = 353.0
-margin_bottom = 536.0
+margin_bottom = 620.0
 size_flags_horizontal = 3
 text = "Client Version"
 align = 1

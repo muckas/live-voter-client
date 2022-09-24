@@ -58,7 +58,7 @@ func _on_VoteRequestTimer_timeout():
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/get-active-vote/" + Global.active_vote_code
+	var endpoint:String = Global.api_path + "get-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -107,7 +107,7 @@ func _on_ConfirmVotePopup_confirmed() -> void:
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/send-vote/" + Global.active_vote_code
+	var endpoint:String = Global.api_path + "send-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)

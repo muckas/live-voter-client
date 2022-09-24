@@ -26,7 +26,7 @@ func set_item_name(name:String):
 	_on_NameEdit_text_entered(name)
 
 func set_item_image(page_index:int, item_index:int) -> void:
-	var endpoint:String = "/image/" + Global.active_vote_id + "/" + String(page_index) + "_" + String(item_index)
+	var endpoint:String = Global.api_path + "image/" + Global.active_vote_id + "/" + String(page_index) + "_" + String(item_index)
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
 	http.connect("request_completed", self, "_on_image_request_completed")
@@ -34,7 +34,7 @@ func set_item_image(page_index:int, item_index:int) -> void:
 
 func upload_image(vote_id:String, page_index:int, item_index:int) -> bool:
 	var img:Image = texture_rect.texture.get_data()
-	var endpoint:String = "/upload-image/" + vote_id + "/" + String(page_index) + "_" + String(item_index)
+	var endpoint:String = Global.api_path + "upload-image/" + vote_id + "/" + String(page_index) + "_" + String(item_index)
 	return Global.upload_image(img, endpoint)
 
 

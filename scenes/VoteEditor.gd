@@ -51,7 +51,6 @@ func _create_vote_from_data(vote_data:Dictionary) -> void:
 		var vote_page_instance:VotePageEdit = vote_page_scene.instance()
 		tab_container.add_child(vote_page_instance)
 		vote_page_instance.set_page_name(vote_page["page_name"])
-		vote_page_instance.set_page_columns(vote_page["page_columns"])
 		for item_index in range(len(vote_page["page_items"])):
 			vote_page_instance.add_vote_item(
 				vote_page["page_items"][String(item_index)]["item_name"],
@@ -106,7 +105,7 @@ func _on_PopupSave_confirmed() -> void:
 	info_popup.popup_centered()
 	var query:String = JSON.print(_return_vote_data())
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/new-vote"
+	var endpoint:String = Global.api_path + "new-vote"
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -146,7 +145,7 @@ func _on_LoadVoteIdEdit_text_entered(_new_text:String) -> void:
 	load_vote_popup.visible = false
 	var vote_id:String = load_vote_id_edit.text
 	Global.active_vote_id = vote_id
-	var endpoint:String = "/vote-data/" + vote_id
+	var endpoint:String = Global.api_path + "vote-data/" + vote_id
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)

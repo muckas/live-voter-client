@@ -74,7 +74,7 @@ func _request_vote_code() -> void:
 		"vote_name": Global.active_vote_data["vote_name"]
 		})
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/host-vote"
+	var endpoint:String = Global.api_path + "host-vote"
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -98,7 +98,7 @@ func _on_host_vote_request_completed(_result:int, _response_code:int, _headers:P
 
 
 func _on_KeepAliveTimer_timeout() -> void:
-	var endpoint:String = "/keep-active-vote/" + Global.active_vote_code
+	var endpoint:String = Global.api_path + "keep-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -145,7 +145,7 @@ func _update_vote_outro() -> void:
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/update-active-vote/" + Global.active_vote_code
+	var endpoint:String = Global.api_path + "update-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -164,7 +164,7 @@ func _update_vote_presenting() -> void:
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/update-active-vote/" + Global.active_vote_code
+	var endpoint:String = Global.api_path + "update-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -203,7 +203,7 @@ func _update_vote_voting() -> void:
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/update-active-vote/" + Global.active_vote_code
+	var endpoint:String = Global.api_path + "update-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -243,7 +243,7 @@ func _on_FinishVoteButton_pressed() -> void:
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/get-active-vote/" + Global.active_vote_code
+	var endpoint:String = Global.api_path + "get-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
@@ -324,7 +324,7 @@ func _on_VoteInfoTimer_timeout() -> void:
 			}
 		)
 	var headers:PoolStringArray = ["Content-Type: application/json"]
-	var endpoint:String = "/get-active-vote/" + Global.active_vote_code
+	var endpoint:String = Global.api_path + "get-active-vote/" + Global.active_vote_code
 	var request_url:String = Global.server_url + ":" + String(Global.server_port) + endpoint
 	var http:HTTPRequest = HTTPRequest.new()
 	self.add_child(http)
