@@ -7,6 +7,7 @@ var vote_results:Dictionary = {}
 var current_page_node:VotePage = null
 
 onready var keep_alive_timer:Timer = $KeepAliveTimer
+onready var vote_info_timer:Timer = $VoteInfoTimer
 onready var error_popup:Popup = $PopupError
 onready var exit_popup:Popup = $ExitPopup
 onready var code_label:Label = $CodeLabel
@@ -188,6 +189,7 @@ func _on_update_vote_presenting_request_completed(
 
 
 func _on_finished_presenting() -> void:
+	vote_info_timer.start()
 	_update_vote_voting()
 
 func _update_vote_voting() -> void:
@@ -237,6 +239,7 @@ func _on_update_vote_voting_request_completed(
 
 
 func _on_FinishVoteButton_pressed() -> void:
+	vote_info_timer.stop()
 	var query:String = JSON.print(
 			{
 				"id": Global.client_id,

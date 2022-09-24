@@ -99,7 +99,14 @@ func _on_BtJoinVote_pressed():
 	join_vote_popup.popup_centered()
 	join_vote_edit.grab_focus()
 
-func _on_JoinVoteEdit_text_changed(_new_text):
+func _on_Key_pressed(key_char:String):
+	join_vote_edit.text += key_char
+	join_vote_edit.caret_position = len(join_vote_edit.text)
+
+func _on_KeyClean_pressed():
+	join_vote_edit.text = ""
+
+func _on_JoinVoteEdit_text_changed(_new_text:String):
 	join_vote_edit.text = join_vote_edit.text.to_upper()
 	join_vote_edit.caret_position = len(join_vote_edit.text)
 
@@ -136,3 +143,4 @@ func _on_join_vote_request_completed(result:int, _response_code:int, _headers:Po
 	else:
 		error_popup.dialog_text = "Server not responding"
 		error_popup.popup_centered()
+
